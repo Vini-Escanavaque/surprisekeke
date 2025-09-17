@@ -39,7 +39,7 @@ export default function Aniversario() {
     "/gato1.jpg","/keren4.jpg","/zelda.gif","/super.gif","/ursinhos.jpg",
     "/eleceed.gif","/omen.gif","/iso.gif","/clove.gif","/pokemntcg.gif",
     "/kuromi.gif","/kuromi1.gif", "/kuromi2.gif", "/dante.gif" , "/cheng.jpg", "/catmoon.png","/crove.gif" ,"/omeneon.gif" ,
-    "/yuyu.gif" , "/sumarai.gif" ,"/akira.gif" ,"/zackfair.gif" , "/cakes.jpg" ,"/red.jpg" ,"/coeio.jpg" ,
+    "/yuyu.gif" , "/sumarai.gif" ,"/akira.gif" ,"/zackfair.gif" , "/cakes.jpg" ,"/red.jpg" ,"/coeio.jpg" ,"/kat.jpg" ,
     "/lovecat.gif","/sandman.gif","/cafezin.gif","/morango.jpg","/groot.gif","/ravenclaw.gif","/harrypotter.gif" ,"/harrypotter2.gif","/flores.gif","/rosas.jpg","/setupkuro.jpg",
   ];
 
@@ -95,6 +95,15 @@ export default function Aniversario() {
     setShowRestartButton(false);
   };
 
+  const handleRestartPage = () => {
+    setIndice(0);
+    setShowCard(true);
+    setShowExtra(false);
+    setScreenGifs([]);
+    setExtraGif(null);
+    setShowRestartButton(false);
+  };
+
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -123,9 +132,7 @@ export default function Aniversario() {
     if (cardRef.current) cardRef.current.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)";
   };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!mounted) return;
@@ -336,7 +343,7 @@ export default function Aniversario() {
 
                 {indice === mensagens.length - 1 && !showExtra && (
                   <button onClick={handlePlayExtra} className="px-6 py-2 bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white font-extrabold rounded-xl shadow-[0_0_25px_rgba(255,255,255,0.9),0_0_50px_rgba(130,80,255,0.7)] hover:scale-110 transition-all animate-pulse mt-4">
-                    🎉 Surpresas!
+                    🗝️ Tesouros desbloqueados! 🗝️
                   </button>
                 )}
               </div>
@@ -346,14 +353,22 @@ export default function Aniversario() {
           <button onClick={avancar} className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white shadow-[0_0_15px_rgba(255,255,255,0.5)] flex items-center justify-center hover:scale-110 hover:shadow-[0_0_35px_rgba(255,255,255,0.9),0_0_60px_rgba(130,80,255,0.7)] transition-all duration-300 text-3xl font-extrabold animate-pulse">▶</button>
         </div>
 
-        {/* Botão de Recomeçar */}
+        {/* Botões de Recomeçar / Voltar */}
         {showRestartButton && (
-          <div className="absolute bottom-12 flex justify-center w-full z-50">
+          <div className="absolute bottom-12 flex flex-col md:flex-row justify-center gap-4 z-50">
+
             <button 
               onClick={handleRestart} 
-              className="px-10 py-4 bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white text-2xl font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_60px_rgba(130,80,255,0.6)] hover:scale-110 transition-all animate-pulse"
+              className="inline-flex px-5 py-4 bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white text-2xl font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_60px_rgba(130,80,255,0.6)] hover:scale-110 transition-all animate-pulse"
             >
               ✨ Recomeçar aventura ✨
+            </button>
+
+            <button 
+              onClick={handleRestartPage} 
+              className="inline-flex px-5 py-4 bg-gradient-to-br from-green-600 via-emerald-500 to-lime-400 text-white text-2xl font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_60px_rgba(80,180,100,0.6)] hover:scale-110 transition-all animate-pulse"
+            >
+              🗺️ Escolher outro caminho 🗺️
             </button>
           </div>
         )}
