@@ -4,7 +4,11 @@ import { Inter, Cinzel } from 'next/font/google';
 export const metadata = {
   title: "Keren Surpresa",
   description: "Mini game de cores",
+  icons: {
+    icon: "/dandan.jpg",
+  },
 };
+
 
 // Configuração da fonte Cinzel para títulos/botões
 const cinzel = Cinzel({
