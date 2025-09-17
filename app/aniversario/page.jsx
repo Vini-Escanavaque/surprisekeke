@@ -1,11 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ← adicionado
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import SoundBar from "./SoundBar";
 
 export default function Aniversario() {
-  const router = useRouter(); // ← inicializa o router
+  const router = useRouter();
 
   const [indice, setIndice] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -39,9 +38,9 @@ export default function Aniversario() {
     "/astarion.gif","/umbreon.gif","/keren1.jpg","/keren2.jpg","/keren3.jpg",
     "/gato1.jpg","/keren4.jpg","/zelda.gif","/super.gif","/ursinhos.jpg",
     "/eleceed.gif","/omen.gif","/iso.gif","/clove.gif","/pokemntcg.gif",
-   "/kuromi.gif","/kuromi1.gif", "/kuromi2.gif", "/dante.gif" , "/cheng.jpg", "/catmoon.png","/crove.gif" ,"/omeneon.gif" ,
-   "/yuyu.gif" , "/sumarai.gif" ,"/akira.gif" ,"/zackfair.gif" , "/cakes.jpg" ,"/red.jpg" ,"/coeio.jpg" ,
-   "/lovecat.gif","/sandman.gif","/cafezin.gif","/morango.jpg","/groot.gif","/ravenclaw.gif","/harrypotter.gif" ,"/harrypotter2.gif","/flores.gif","/rosas.jpg","/setupkuro.jpg",
+    "/kuromi.gif","/kuromi1.gif", "/kuromi2.gif", "/dante.gif" , "/cheng.jpg", "/catmoon.png","/crove.gif" ,"/omeneon.gif" ,
+    "/yuyu.gif" , "/sumarai.gif" ,"/akira.gif" ,"/zackfair.gif" , "/cakes.jpg" ,"/red.jpg" ,"/coeio.jpg" ,
+    "/lovecat.gif","/sandman.gif","/cafezin.gif","/morango.jpg","/groot.gif","/ravenclaw.gif","/harrypotter.gif" ,"/harrypotter2.gif","/flores.gif","/rosas.jpg","/setupkuro.jpg",
   ];
 
   const finalExtra = "/peony.gif";
@@ -59,21 +58,20 @@ export default function Aniversario() {
     setShowExtra(true);
     setShowRestartButton(false);
 
-      const shuffledGifs = [...gifs].sort(() => 0.5 - Math.random());
-  const extraGifs = shuffledGifs.map((src, i) => {
-    const size = 60 + Math.random() * 140;
-    return {
-      id: Date.now() + i,
-      src,
-      // Limita a posição inicial para não sair da tela
-      x: Math.random() * (window.innerWidth - size) + size / 2,
-      y: Math.random() * (window.innerHeight - size) + size / 2,
-      dx: (Math.random() - 0.5) * 1.2,
-      dy: (Math.random() - 0.5) * 1.2,
-      size,
-      hover: false,
-    };
-  });
+    const shuffledGifs = [...gifs].sort(() => 0.5 - Math.random());
+    const extraGifs = shuffledGifs.map((src, i) => {
+      const size = 60 + Math.random() * 140;
+      return {
+        id: Date.now() + i,
+        src,
+        x: Math.random() * (window.innerWidth - size) + size / 2,
+        y: Math.random() * (window.innerHeight - size) + size / 2,
+        dx: (Math.random() - 0.5) * 1.2,
+        dy: (Math.random() - 0.5) * 1.2,
+        size,
+        hover: false,
+      };
+    });
 
     setScreenGifs(extraGifs);
     setTimeout(() => setScreenGifs([]), 30000);
@@ -88,7 +86,7 @@ export default function Aniversario() {
   };
 
   const handleRestart = () => {
-     router.push("/");
+    router.push("/");
     setIndice(0);
     setShowCard(true);
     setShowExtra(false);
@@ -125,7 +123,9 @@ export default function Aniversario() {
     if (cardRef.current) cardRef.current.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)";
   };
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;
@@ -155,6 +155,7 @@ export default function Aniversario() {
       let f = newGifs[i];
       f.x += f.dx;
       f.y += f.dy;
+
       if (f.x - f.size / 2 < 0 || f.x + f.size / 2 > window.innerWidth) f.dx *= -1;
       if (f.y - f.size / 2 < 0 || f.y + f.size / 2 > window.innerHeight) f.dy *= -1;
 
@@ -253,30 +254,31 @@ export default function Aniversario() {
 
         {/* GIFs */}
         {allGifs.map(f => (
-          <Image key={f.id} src={f.src} alt="GIF animado" width={f.size} height={f.size}
-                 className="absolute z-20 transition-transform duration-300"
-                 style={{
-                   left: f.left || `${f.x}px`,
-                   top: f.bottom || `${f.y}px`,
-                   transform: `translate(-50%, -50%) scale(${f.hover ? 1.2 : 1})`,
-                   filter: f.hover ? "drop-shadow(0 0 25px rgba(255,255,255,0.9))" : "none",
-                 }}
-          />
+          <img key={f.id} src={f.src} alt="GIF animado"
+               style={{
+                 position: "absolute",
+                 width: `${f.size}px`,
+                 height: `${f.size}px`,
+                 left: f.left || `${f.x}px`,
+                 top: f.bottom || `${f.y}px`,
+                 transform: `translate(-50%, -50%) scale(${f.hover ? 1.2 : 1})`,
+                 filter: f.hover ? "drop-shadow(0 0 25px rgba(255,255,255,0.9))" : "none",
+                 transition: "transform 0.3s",
+                 zIndex: 20,
+               }}/>
         ))}
 
         {/* Último GIF + corações + mensagem final */}
         {extraGif && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-            <Image
+            <img
               src={extraGif.src}
               alt="Peony Surprise"
               width={500}
               height={500}
               className="animate-peony-glow"
-              unoptimized
               style={{
-                filter:
-                  "drop-shadow(0 0 25px rgba(255,192,203,0.9)) drop-shadow(0 0 55px rgba(255,182,193,0.6))",
+                filter: "drop-shadow(0 0 25px rgba(255,192,203,0.9)) drop-shadow(0 0 55px rgba(255,182,193,0.6))",
               }}
             />
 
@@ -317,25 +319,19 @@ export default function Aniversario() {
             >
               <div className="card-content relative bg-white/90 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center p-4 text-center shadow-lg gap-4 transition-transform duration-200">
                 <div className="relative w-[360px] h-[360px] rounded-xl overflow-hidden shadow-lg flex items-center justify-center bg-white">
-                  <Image src={imagens[0]} alt="Imagem Keren" width={360} height={360} className="object-cover w-full h-full rounded-xl" priority />
+                  <img src={imagens[0]} alt="Imagem Keren" className="object-cover w-full h-full rounded-xl" />
                   <div className="absolute inset-0 rounded-xl pointer-events-none holo-border neon-border"></div>
                   <div className="absolute inset-0 rounded-xl pointer-events-none holo-shine"></div>
                 </div>
+
                 {Array.isArray(mensagens[indice]) ? (
                   <div className="flex flex-col gap-2">
                     {mensagens[indice].map((linha, i) => (
-                      <p
-                        key={i}
-                        className="text-xl md:text-2xl font-extrabold text-purple-900 drop-shadow-[0_2px_2px_rgba(255,255,255,0.7)] animate-pulse"
-                      >
-                        {linha}
-                      </p>
+                      <p key={i} className="text-xl md:text-2xl font-extrabold text-purple-900 drop-shadow-[0_2px_2px_rgba(255,255,255,0.7)] animate-pulse">{linha}</p>
                     ))}
                   </div>
                 ) : (
-                  <h1 className="text-xl md:text-2xl font-extrabold text-purple-900 drop-shadow-[0_2px_2px_rgba(255,255,255,0.7)] px-2 animate-pulse">
-                    {mensagens[indice]}
-                  </h1>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-purple-900 drop-shadow-[0_2px_2px_rgba(255,255,255,0.7)] px-2 animate-pulse">{mensagens[indice]}</h1>
                 )}
 
                 {indice === mensagens.length - 1 && !showExtra && (
@@ -351,16 +347,16 @@ export default function Aniversario() {
         </div>
 
         {/* Botão de Recomeçar */}
-       {showRestartButton && (
-        <div className="absolute bottom-12 flex justify-center w-full z-50">
-          <button 
-            onClick={handleRestart} 
-            className="px-10 py-4 bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white text-2xl font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_60px_rgba(130,80,255,0.6)] hover:scale-110 transition-all animate-pulse"
-          >
-            ✨ Recomeçar aventura ✨
-          </button>
-        </div>
-      )}
+        {showRestartButton && (
+          <div className="absolute bottom-12 flex justify-center w-full z-50">
+            <button 
+              onClick={handleRestart} 
+              className="px-10 py-4 bg-gradient-to-br from-indigo-700 via-purple-500 to-pink-500 text-white text-2xl font-extrabold rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_60px_rgba(130,80,255,0.6)] hover:scale-110 transition-all animate-pulse"
+            >
+              ✨ Recomeçar aventura ✨
+            </button>
+          </div>
+        )}
 
         <style jsx>{`
           @keyframes cair {0%{transform:translateY(-10vh) rotate(0deg);opacity:1;}100%{transform:translateY(120vh) rotate(360deg);opacity:0.6;}}
