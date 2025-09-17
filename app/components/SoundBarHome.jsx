@@ -2,12 +2,13 @@
 import { useState, useRef, useEffect } from "react";
 
 export default function SoundBarHome({ className }) {
-  const [volume, setVolume] = useState(0.1); // volume inicial 20%
+  const [volume, setVolume] = useState(0.1); // volume inicial 10%
   const audioRef = useRef(null);
   const canvasRef = useRef(null);
   const audioCtxRef = useRef(null);
   const analyserRef = useRef(null);
   const sourceRef = useRef(null);
+  const [autoplayTriggered, setAutoplayTriggered] = useState(false);
 
   const handleVolume = (e) => {
     const newVolume = parseFloat(e.target.value);
@@ -15,36 +16,56 @@ export default function SoundBarHome({ className }) {
     if (audioRef.current) audioRef.current.volume = newVolume;
   };
 
+  // Função que inicia o áudio e AudioContext
+  const initAudio = async () => {
+    if (!audioRef.current || autoplayTriggered) return;
+
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        analyserRef.current = audioCtxRef.current.createAnalyser();
+        sourceRef.current = audioCtxRef.current.createMediaElementSource(audioRef.current);
+        sourceRef.current.connect(analyserRef.current);
+        analyserRef.current.connect(audioCtxRef.current.destination);
+        analyserRef.current.fftSize = 64;
+      }
+
+      if (audioCtxRef.current.state === "suspended") {
+        await audioCtxRef.current.resume();
+      }
+
+      await audioRef.current.play();
+      setAutoplayTriggered(true);
+    } catch (err) {
+      console.log("Autoplay bloqueado", err);
+    }
+  };
+
   useEffect(() => {
-    if (!audioRef.current) return;
-
-    audioRef.current.volume = volume;
-    audioRef.current.loop = true;
-
-    // Inicializa AudioContext e Analyser se necessário
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      analyserRef.current = audioCtxRef.current.createAnalyser();
-      sourceRef.current = audioCtxRef.current.createMediaElementSource(audioRef.current);
-      sourceRef.current.connect(analyserRef.current);
-      analyserRef.current.connect(audioCtxRef.current.destination);
-      analyserRef.current.fftSize = 64;
+    // Define volume e loop
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      audioRef.current.loop = true;
     }
 
-    // Tenta autoplay
-    const autoplay = async () => {
-      try {
-        if (audioCtxRef.current.state === "suspended") {
-          await audioCtxRef.current.resume();
-        }
-        await audioRef.current.play();
-      } catch (err) {
-        console.log("Autoplay bloqueado, ajuste o volume manualmente", err);
-      }
-    };
-    autoplay();
+    // Tenta autoplay ao montar
+    initAudio();
 
-    // Visualizador
+    // Event listener global para qualquer clique
+    const clickHandler = () => {
+      initAudio();
+    };
+    window.addEventListener("click", clickHandler);
+
+    return () => {
+      window.removeEventListener("click", clickHandler);
+    };
+  }, [volume]);
+
+  // Visualizador de áudio
+  useEffect(() => {
+    if (!analyserRef.current || !canvasRef.current) return;
+
     const analyser = analyserRef.current;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
@@ -70,14 +91,13 @@ export default function SoundBarHome({ className }) {
       }
     };
     draw();
-  }, [volume]);
+  }, [autoplayTriggered]);
 
   return (
     <div
       className={`fixed bottom-6 left-6 w-72 bg-gradient-to-r from-blue-900 to-purple-900/70 backdrop-blur-lg rounded-xl flex items-center px-4 py-3 shadow-2xl gap-3 z-[9999] ${className}`}
     >
       <canvas ref={canvasRef} className="flex-1 h-10 rounded" width={200} height={50} />
-
       <input
         type="range"
         min="0"
@@ -87,7 +107,6 @@ export default function SoundBarHome({ className }) {
         onChange={handleVolume}
         className="w-20 accent-pink-500"
       />
-
       <audio ref={audioRef} src="/audio/finalfantasy.mp3" preload="auto" />
     </div>
   );
