@@ -37,7 +37,7 @@ export default function Aniversario() {
     "/star1.gif","/stars.gif","/buttler.gif","/borboletas.gif","/catlua.gif",
     "/astarion.gif","/umbreon.gif","/keren1.jpg","/keren2.jpg","/keren3.jpg",
     "/gato1.jpg","/keren4.jpg","/zelda.gif","/super.gif","/ursinhos.jpg",
-    "/eleceed.gif","/omen.gif","/iso.gif","/clove.gif","/pokemntcg.gif",
+    "/eleceed.gif","/omen.gif","/iso.gif","/clove.gif","/pokemntcg.gif","/wingman.gif",
     "/kuromi.gif","/kuromi1.gif", "/kuromi2.gif", "/dante.gif" , "/cheng.jpg", "/catmoon.png","/crove.gif" ,"/omeneon.gif" ,
     "/yuyu.gif" , "/sumarai.gif" ,"/akira.gif" ,"/zackfair.gif" , "/cakes.jpg" ,"/red.jpg" ,"/coeio.jpg" ,"/kat.jpg" ,
     "/lovecat.gif","/sandman.gif","/cafezin.gif","/morango.jpg","/groot.gif","/ravenclaw.gif","/harrypotter.gif" ,"/harrypotter2.gif","/flores.gif","/rosas.jpg","/setupkuro.jpg",
